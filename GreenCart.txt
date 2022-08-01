@@ -1,0 +1,416 @@
+package GreenCart;
+
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+
+
+public class ScenarioClass {
+	static WebElement tomato,Apple,Cart,CheckOut,Placeorder,Dropdown,Checkbox,Proceed,Successmessage,
+	SelectQuantity,price,quantity,SelectTomato,Couponcode,Apply,info,Remove,SelectGreps,Greps,vegname,VegQ,frquantity,Fruitname,F1;
+	
+	 static Logger log=LogManager.getLogger(ScenarioClass.class.getName());
+	
+	/*This method is used to read the xpath locators from properties file and
+	 * assign to string variables same will be used in findelement.*/
+	public static boolean AddToCartTomato(String strtomato,WebDriver driver){
+		  log.info("Enter into AddToCartTomato Method");
+		  tomato = driver.findElement(By.xpath(strtomato));
+		  tomato.click();
+		 
+		  vegname = driver.findElement(By.xpath("//h4[contains(text(),'Tomato')]"));
+	      String name = vegname.getText();
+	      boolean actresult = name.contains("Tomato");
+	      //System.out.println(name);
+	      log.info(name);
+	      log.info("Click on tomato to add in the cart");
+		  log.info("Exit AddToCartTomato Method"); 
+	      return actresult;
+		 
+	}
+	public static boolean AddToCartApple(String strApple,WebDriver driver) {
+		  log.info("Enter into AddToCartApple Method");
+		Apple = driver.findElement(By.xpath(strApple));
+		Apple.click();
+		  F1 = driver.findElement(By.xpath("//h4[contains(text(),'Apple')]"));
+	      String name = F1.getText();
+	      boolean actualresult = name.contains("Apple");
+		  log.info("Click on Apple to add in the cart");
+		  log.info("Exit AddToCartApple Method");
+		  return actualresult;
+	}
+	public  static String SelectQuantity(String strSelQuantity,WebDriver driver) {
+		 log.info("Enter into SelectQuantity Method");
+		SelectQuantity = driver.findElement(By.xpath(strSelQuantity));
+		Actions act = new Actions(driver);
+		act.doubleClick(SelectQuantity).perform();
+		
+		VegQ = driver.findElement(By.xpath("(//input[@class='quantity'])[6]"));
+		String VQ =VegQ.getAttribute("value");
+	  //  System.out.println(VQ);
+		log.info(VQ);
+		log.debug("Quantity of tomato is Selected");
+		log.info("Exit SelectQuantity Method");
+		return VQ;
+	}
+	public static void VerifyCart(String strCart,WebDriver driver )  {
+		  log.info("Enter into Verify Cart Method");
+		  Cart = driver.findElement(By.xpath(strCart));
+		  Cart.click();
+		  log.info("Click on the Cart icon");
+		  log.info("Exit VerifyCart Method");	  
+	}
+	public static void RemoveItem(String strRemove,WebDriver driver) {
+		log.info("Enter into RemoveItem Method");
+		Remove = driver.findElement(By.xpath(strRemove));
+		Remove.click();
+		log.info("item is remove from cart");
+		  log.info("Exit RemoveItem Method");	  		
+	}
+	public static void CheckoutCart(String strCheckOut, WebDriver driver) {
+		log.info("Enter into CheckoutCart Method");
+		CheckOut = driver.findElement(By.xpath(strCheckOut));
+		  CheckOut.click();
+		  log.info("Click on proceedToCheckout button");
+		  log.info("Exit CheckoutCart Method");	  
+	}
+	
+	public static String PlaceOrder(String strPlaceorder,String strDropdown,String strCountry,String strCheckbox,String strProceed, WebDriver driver)  
+	{     
+		  log.info("Enter into PlaceOrder Method");
+		  WebDriverWait  wait = new WebDriverWait(driver,20);
+		  wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(strPlaceorder)));
+		
+		  Placeorder = driver.findElement(By.xpath(strPlaceorder));
+		  Placeorder.click();
+		  log.info("Click on placeorder");
+		  
+		  wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(strDropdown)));
+		  Dropdown = driver.findElement(By.xpath(strDropdown));
+		 
+		  Dropdown.click();
+		  log.info("click on Country dropdown");
+		  Select s = new Select(Dropdown);
+		  s.selectByValue(strCountry);
+		  log.info("Selected country is " +strCountry);
+		  System.out.println("country :"+strCountry);
+		  
+		  Checkbox = driver.findElement(By.xpath(strCheckbox));
+		  Checkbox.click();
+	      log.info("Click on Term And condtion checkbox");
+		  Proceed = driver.findElement(By.xpath(strProceed));
+	      Proceed.click();
+	      
+		  log.info("Click on proceed button");
+		  log.info("Exit PlaceOrder Method");
+		  return strCountry;
+		//your order has been placed successfully
+	}
+	public static boolean verifysuccess(String strSuccessmessage, WebDriver driver) {
+		   Successmessage = driver.findElement(By.xpath(strSuccessmessage));
+		   strSuccessmessage = Successmessage.getText();
+		   boolean result =strSuccessmessage.contains("your order has been placed successfully");
+		   log.info("Order message is :"+strSuccessmessage);
+		   System.out.println("Order message is :"+strSuccessmessage);
+		   return result;
+	}
+	public static String[] VerifyPrice(String strTPrice,String strQuantity,WebDriver driver ) {
+		log.info("Enter into VerifyPrice Method");
+		price = driver.findElement(By.xpath(strTPrice));
+		String Tprice = price.getText();
+		System.out.println(Tprice);
+		log.info("Total price of items:-"+Tprice);
+	
+		 quantity = driver.findElement(By.xpath(strQuantity));
+		 String Quantity = quantity.getAttribute("value");
+		 System.out.println(Quantity);
+		 log.info("Quantity of items :-" +Quantity);
+		 log.info("Exit VerifyPrice Method");
+		  String values[] ={Tprice,Quantity};
+		  return values;
+	}
+	public static String selectGreps(String strSelGreps,WebDriver driver) {
+		SelectGreps = driver.findElement(By.xpath(strSelGreps));
+		SelectGreps.click();
+		frquantity = driver.findElement(By.xpath("(//input[@class='quantity'])[17]"));
+		String FQ = frquantity.getAttribute("value");
+		System.out.println(FQ);
+		log.info("Quantity of greps is selected");
+		return FQ;
+	}
+	public  static boolean AddToCartGreps(String strGreps,WebDriver driver)  
+	{
+		log.info("Enter into AddToCartGreps Method");
+		Greps = driver.findElement(By.xpath(strGreps));
+		Greps.click();
+		Fruitname = driver.findElement(By.xpath("//h4[contains(text(),'Grapes')]"));
+	    String fname = Fruitname.getText();
+	    boolean actualresult = fname.contains("Grapes");
+	    System.out.println(fname);
+		log.info("greps are selected");
+		log.info("Exit AddToCartGreps Method");
+		return actualresult;
+	}
+	public static String ApplyCoupon (String strCouponcode,String strApply,String strinfo,WebDriver driver) {
+		log.info("Enter into ApplyCoupon Method");
+		WebDriverWait wait = new WebDriverWait(driver,20);
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(strCouponcode)));
+		Couponcode = driver.findElement(By.xpath(strCouponcode));
+		Couponcode.sendKeys("test");
+		log.info("coupon code is Applied");
+		Apply = driver.findElement(By.xpath(strApply));
+		Apply.click();
+		log.info("clicked on Apply button");
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(strinfo)));
+		info = driver.findElement(By.xpath(strinfo));
+		String message = info.getText();
+		
+		log.info("Applied coupon Code is :"+strinfo);
+		log.info("Exit ApplyCoupon Method");
+		return message;
+	    }
+	
+}
+
+
+package GreenCart;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Properties;
+
+import org.apache.logging.log4j.Logger;
+import org.testng.annotations.DataProvider;
+
+
+
+public class Utility  {
+	 static String value;
+	 static FileInputStream objFIS;
+	public static String getData(String key,Logger log) {
+		
+//Create fileinput stream object for properties file
+     try {
+		objFIS = new FileInputStream(System.getProperty("user.dir")+"\\src\\test\\java\\Data\\driver.properties");
+		//creating properties class object
+		Properties p = new Properties();
+	    p.load(objFIS);
+	//get the property using get property()
+	     value = p.getProperty(key);
+		 objFIS.close();
+	} catch (FileNotFoundException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (IOException e)
+     {
+		// TODO Auto-generated catch block
+		log.info("Inside IOException "+e.toString());
+		e.printStackTrace();
+		
+	}
+	
+	 return value;
+}
+	 @DataProvider (name = "TC01_data")
+	    public Object[][] dpMethod1()
+		  {
+			 return new Object[][] {{"Tomato","Apple","India",}};
+	      } 
+	 @DataProvider (name = "TC02_data")
+	    public Object[][] dpMethod2()
+		  {
+			 return new Object[][] {{"Tomato","3","48"}};
+	      }  
+	 @DataProvider (name = "TC03_data")
+	    public Object[][] dpMethod3()
+		  {
+			 return new Object[][] {{"Tomato","3","Greps","2","Invalid code ..!"}};
+	      }
+	 
+}
+
+package GreenCart;
+
+import java.util.concurrent.TimeUnit;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Listeners;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import GreenCart.ScenarioClass;
+
+import GreenCart.Utility;
+
+@Listeners(Assignment.Listeners.class)
+public class TestClass   {
+	    static WebDriver driver ;
+		static String strBrowser,strBrowser1,strUrl,strDriverkey,strDriverPath,strCountry,strtomato,strApple,strCart,strCheckOut,strPlaceorder
+		,strDropdown,strCheckbox,strProceed,strSuccess,strSelQuantity,strTPrice,strQuantity,strTitle,
+		strSelGreps,strGreps,strRemove,strCouponcode,strApply,strinfo,strSuccessmessage,strFruitvegname,strvegname,Tprice;
+		static Logger log=LogManager.getLogger(TestClass.class.getName());
+/*This method is used to read the xpath locators from properties file and * assign to string variables same will be used in findelement.*/
+       @BeforeClass
+	    public static void initialize()
+	        {
+	    	    log.info("inside the initialize method");
+	        	strBrowser = Utility.getData("Browser",log);
+	            strDriverPath =Utility.getData("BrowserPath", log);
+	            strDriverkey =Utility.getData("BrowserKey",log);
+	        	strUrl =Utility.getData("URL",log);
+	        	strtomato = Utility.getData("tomato",log);
+	        	strApple =Utility.getData("Apple",log);
+	        	strCart =Utility.getData("Cart",log);
+	        	strCheckOut =Utility.getData("proceedToCheckout",log);
+	        	strPlaceorder=Utility.getData("PlaceOrder",log);
+	        	strDropdown=Utility.getData("DropDown",log);
+	        	strCountry = Utility.getData("orderingcountry",log);
+	        	strCheckbox =Utility.getData("Checkbox",log);
+	        	strProceed =Utility.getData("Proceed",log);
+	        	strSelQuantity =Utility.getData("SelectTomato",log);
+	        	strTPrice = Utility.getData("CheckPrice",log);
+	        	strQuantity = Utility.getData("CheckQuantity",log);
+	        	strSelGreps =Utility.getData("SelectGreps",log);
+	        	strGreps =Utility.getData("Greps",log);
+	        	strRemove =Utility.getData("Remove",log);
+	        	strCouponcode =Utility.getData("Couponcode",log);
+	        	strApply =Utility.getData("Apply",log);
+	        	strinfo =Utility.getData("Codeinfo",log);
+	        	strSuccessmessage=Utility.getData("SuccessMessage",log);
+	        	strFruitvegname = Utility.getData("FruitVegLocator", log);
+	        	strvegname = Utility.getData("vegname", log);
+	        	log.info("exiting the initialize method");
+	        }
+       
+       @BeforeMethod
+       public static void BrowserSetup()  {
+    		
+   		if(strBrowser.equalsIgnoreCase("Chrome"))
+   		{
+   		System.setProperty(strDriverkey,strDriverPath);
+   		   log.info("Using Chrome Browser");
+   		   driver =new ChromeDriver();
+   		 log.info("Browser Driverkey is :-"+strDriverkey+" Browser driver Path is:-"+strDriverPath);
+   		}
+   		else if(strBrowser1.equalsIgnoreCase("Gecko"))
+   		{
+   			System.setProperty(strDriverkey,strDriverPath);
+   			log.info("using gecko browser");
+   			driver = new FirefoxDriver();
+   		 log.info("Browser Driverkey is "+strDriverkey+" Browser driver Path "+strDriverPath);
+   		}
+   		else
+   		{
+   			log.error("Browser is not initionalise");
+   			System.exit(0);
+   		}
+   		
+   		
+   	  driver.manage().window().maximize();
+   	  driver.manage().timeouts().implicitlyWait(10,TimeUnit.SECONDS);
+   	  driver.get(strUrl);
+   	  log.info("Application Under Test is :- "+strUrl);
+   	 
+   	  log.info("Url is opened");
+   	   strTitle =driver.getTitle();
+   	  System.out.println(strTitle);
+   	  log.info("Title of the page is:-"+strTitle);
+   	}
+       
+       @Test (dataProvider = "TC01_data",dataProviderClass = Utility.class)
+       public static void TC01 (String vegname,String Fruitname,String expcountry)
+       {
+    	   log.info("Running TC01");
+    	   boolean actresult = ScenarioClass.AddToCartTomato(strtomato, driver);
+     	   Assert.assertTrue(actresult);
+     	   
+    	   boolean actualresult = ScenarioClass.AddToCartApple(strApple, driver);
+    	   Assert.assertTrue(actualresult);
+    	   
+    	   ScenarioClass.VerifyCart(strCart, driver);
+    	   
+    	   ScenarioClass.CheckoutCart(strCheckOut, driver);
+    	   String actcountry = ScenarioClass.PlaceOrder(strPlaceorder, strDropdown, strCountry, strCheckbox, strProceed,driver);
+    	   Assert.assertEquals(actcountry,expcountry);
+    	   
+    	   boolean result=ScenarioClass.verifysuccess(strSuccessmessage, driver);
+    	   Assert.assertTrue(result);
+    	   
+    	   log.info("TC01 is Passed ");  
+       }
+       
+       @Test(dataProvider = "TC02_data",dataProviderClass = Utility.class)
+       public static void TC02(String vegname,String vegQ,String vegPrice)
+       {
+    	  log.info("Running TC02");
+    	  ScenarioClass.SelectQuantity(strSelQuantity,driver);
+    	  
+    	  boolean actresult = ScenarioClass.AddToCartTomato(strtomato, driver);
+    	  Assert.assertTrue(actresult);
+    	  
+    	  ScenarioClass.VerifyCart(strCart, driver);
+    	  ScenarioClass.CheckoutCart(strCheckOut,driver);
+    	  String data[]= ScenarioClass.VerifyPrice(strTPrice, strQuantity, driver);
+    	  
+    	  Assert.assertEquals(data[0],vegPrice);
+    	  log.info("Total price is verified");
+    	  
+    	  Assert.assertEquals(data[1],vegQ);
+    	  log.info("Total quantity is verified");
+    	  
+    	  log.info("TC02 is Passed "); 
+       }   
+       @Test (dataProvider = "TC03_data",dataProviderClass = Utility.class)
+      
+       public static void TC03(String vegname,String vegQ,String Frname,String FrQ,String Msg) 
+       {
+    	  log.info("Running TC03");
+    	  String VQ =ScenarioClass.SelectQuantity(strSelQuantity, driver);
+    	  Assert.assertEquals(VQ, vegQ);
+    	  
+    	  boolean actresult = ScenarioClass.AddToCartTomato(strtomato, driver);
+    	  Assert.assertTrue(actresult);
+    	  
+    	  String FQ =  ScenarioClass.selectGreps(strSelGreps, driver);
+    	  Assert.assertEquals(FQ, FrQ);
+    	  
+    	  boolean actualresult= ScenarioClass.AddToCartGreps(strGreps, driver);
+    	  Assert.assertTrue(actualresult);
+    	  
+    	  ScenarioClass.VerifyCart(strCart, driver);
+    	  
+    	  ScenarioClass.RemoveItem(strRemove, driver);
+    	  
+    	  ScenarioClass.CheckoutCart(strCheckOut, driver);
+    	  
+    	 String Message = ScenarioClass.ApplyCoupon(strCouponcode, strApply, strinfo, driver);
+    	 Assert.assertEquals(Message,Msg);
+    	
+    	 log.info("TC03 is Passed ");   
+    
+       } 
+
+       @AfterMethod
+       public static void Close() 
+       {
+    	   driver.quit();
+       }
+}
